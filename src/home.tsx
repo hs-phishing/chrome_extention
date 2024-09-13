@@ -14,6 +14,7 @@ const Home: React.FC = () => {
         setLoading(true);
         try {
             const response = await axios.post('/api/url/detailed', { url });
+            console.log(response.data); // 서버 응답 확인
             setResult(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -59,27 +60,20 @@ const Home: React.FC = () => {
 
                     <div className="content">
                         <div className="left-section">
-                            <div className="url-risk">
-                                <p className="section-title">URL</p>
-                                <div className={`status-box ${result.phishing_result ? 'danger' : 'safe'}`}>
-                                    {result.phishing_result ? 'Danger' : 'Safe'}
-                                </div>
-                                <p>Phishing probability: <span className="percentage">{result.phishing_prob}%</span></p>
-                            </div>
                             <div className="ip-score">
                                 <p className="section-title">IP Score</p>
-                                <div className={`status-box ${result.ip_info.is_vpn ? 'danger' : 'safe'}`}>
-                                    {result.ip_info.is_vpn ? 'Danger' : 'Safe'}
+                                <div className={`status-box ${result.is_vpn ? 'danger' : 'safe'}`}>
+                                    {result.is_vpn ? 'Danger' : 'Safe'}
                                 </div>
-                                <p>IP: {result.ip_info.ip_address}</p>
-                                <p>Country: {result.ip_info.country}</p>
-                                <p>Region: {result.ip_info.region}</p>
+                                <p>IP: {result.ip_address}</p>
+                                <p>Country: {result.country}</p>
+                                <p>Region: {result.region}</p>
                             </div>
                         </div>
 
                         <div className="right-section">
                             <h3>Reason & Summary</h3>
-                            <p>{result.suspicious_features.join(', ')}</p>
+                            <p>{result.url_based_feature_list ? result.url_based_feature_list.join(', ') : 'N/A'}</p>
                         </div>
                     </div>
                 </div>
