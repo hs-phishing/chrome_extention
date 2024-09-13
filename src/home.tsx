@@ -24,6 +24,19 @@ const Home: React.FC = () => {
         }
     };
 
+    // prediction_result에 따라 신뢰도 텍스트 변경
+    const getReliabilityText = (prediction_result: number) => {
+        if (prediction_result === 1) {
+            return 'not reliable site';
+        } else if (prediction_result === 0) {
+            return 'suspicious site';
+        } else if (prediction_result === -1) {
+            return 'reliable site';
+        } else {
+            return 'unknown'; // 예외 처리
+        }
+    };
+
     return (
         <div className="home">
             <h1 className="title">Catch Phishing</h1>
@@ -47,7 +60,7 @@ const Home: React.FC = () => {
                 {result ? (
                     <>
                         <h1>{result.url}</h1>
-                        <p className="reliable-site">{result.is_reliable ? 'a reliable site' : 'not reliable'}</p>
+                        <p className="reliable-site">{getReliabilityText(result.prediction_result)}</p>
                     </>
                 ) : null}
             </div>
@@ -68,12 +81,18 @@ const Home: React.FC = () => {
                                 <p>IP: {result.ip_address}</p>
                                 <p>Country: {result.country}</p>
                                 <p>Region: {result.region}</p>
+                                <p>Phishing Prediction: {result.prediction_result}</p>
+                                <p>Phishing Probability: {result.prediction_prob}</p>
+                                <p>ISP Name: {result.isp_name}</p>
+                                <p>VPN Usage: {result.is_vpn ? 'Yes' : 'No'}</p>
                             </div>
                         </div>
 
                         <div className="right-section">
                             <h3>Reason & Summary</h3>
                             <p>{result.url_based_feature_list ? result.url_based_feature_list.join(', ') : 'N/A'}</p>
+                            <p>{result.content_based_feature_list ? result.content_based_feature_list.join(', ') : 'N/A'}</p>
+                            <p>{result.domain_based_feature_list ? result.domain_based_feature_list.join(', ') : 'N/A'}</p>
                         </div>
                     </div>
                 </div>
