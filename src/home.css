@@ -1,0 +1,137 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* 변경: 화면 높이의 최소값으로 설정 */
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'Krona One', sans-serif;
+    padding: 50px;
+}
+
+.title {
+    margin-top: 180px;
+    font-size: 48px;
+    font-weight: normal;
+    background: linear-gradient(90deg, #245AAB, #253E62);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 30px;
+}
+
+.search-container {
+    position: relative;
+    width: 100%; /* 부모 요소에 대한 너비 설정 */
+    max-width: 600px; /* 최대 너비 제한 */
+    display: flex; /* flexbox를 사용하여 중앙 정렬 */
+    justify-content: center; /* 중앙에 배치 */
+    margin-bottom: 320px;
+}
+
+.search-input {
+    width: 100%; /* 100%로 설정하여 max-width에 맞추도록 */
+    padding: 10px 15px 10px 70px;
+    font-size: 16px;
+    border: 2px solid #7D9EF1;
+    border-radius: 30px;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: #aaa;
+}
+
+.search-icon {
+    position: absolute;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    fill: #7D9EF1;
+}
+
+
+
+
+
+.url-title {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.url-title h1 {
+    font-size: 48px;
+    color: #00ff00;
+}
+
+.reliable-site {
+    font-size: 16px;
+    color: #0066cc;
+    margin-top: 5px;
+}
+
+
+
+
+.content-box {
+    width: 53%;
+    background-color: rgba(29, 29, 29, 0.33);
+    border: 1px solid #494949;
+    border-radius: 15px;
+    padding: 50px 100px 50px 100px;
+    margin-top: 50px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.about-heading {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+/* 좌우로 나눌 컨텐츠 */
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* 좌측 섹션 */
+.left-section {
+    width: 40%;
+}
+
+.section-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+/* 상태 박스 */
+.status-box {
+    width: 100px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #002244;
+    color: #00ff00;
+    margin-bottom: 10px;
+}
+
+/* 우측 섹션 */
+.right-section {
+    width: 55%;
+}
+
+.right-section h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.right-section p {
+    line-height: 1.6;
+    font-size: 16px;
+    color: #aaa;
+}
