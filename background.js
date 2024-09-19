@@ -1,7 +1,7 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "checkPhishing") {
     const url = request.url;
-    fetch('http://43.203.35.252:5000/api/url/simple', {
+    fetch('https://www.web-phishing-detection-be.site/api/url/simple', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -22,7 +22,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   
   async function checkPhishing(url) {
-    const apiURL = 'http://43.203.35.252:5000/api/url/simple'; // API 주소, https로 수정필요
+    const apiURL = 'https://www.web-phishing-detection-be.site/api/url/simple'; // API 주소,
   
     try {
       const response = await fetch(apiURL, {

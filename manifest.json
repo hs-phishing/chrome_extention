@@ -2,12 +2,11 @@
   "manifest_version": 3,
   "name": "Catch Phishing",
   "description": "웹 사이트의 피싱 확률과 분석 결과를 실시간으로 확인하고, 안전하게 웹을 탐색할 수 있습니다.",
-  "version": "2.2.6",
+  "version": "2.3.2",
   "permissions": [
     "storage",
     "activeTab",
-    "scripting",
-    "http://localhost:3000/"
+    "https://www.catch-phishing.site/"
   ],
   "background": {
     "service_worker": "background.js"

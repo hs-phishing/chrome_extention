@@ -1,4 +1,6 @@
+// Phishing detection 활성화 여부를 저장하는 변수
 let phishingDetectionEnabled = false;
+let tooltipTimeout = null; // 타이머를 저장할 변수
 
 // 비활성화/활성화 상태에 따른 동작을 설정하는 함수
 chrome.storage.sync.get('detectionEnabled', function(result) {
@@ -15,22 +17,34 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 });
 
 // 마우스 오버 시 이벤트 감지 및 background.js로 URL 전송
-document.addEventListener('mouseover', async (event) => {
+document.addEventListener('mouseover', (event) => {
     if (!phishingDetectionEnabled) return;  // 비활성화 상태라면 동작하지 않음
 
     const linkElement = event.target.closest('a');
     if (linkElement && linkElement.href) {
         const url = linkElement.href;
 
-        try {
-            const response = await sendMessageAsync({ type: "checkPhishing", url: url });
-            if (response) {
-                console.log('Phishing check response:', response);
-                showTooltip(linkElement, response.risk, response.probability, url);
+        // 툴팁을 1초 후에 생성하기 위해 타이머 설정
+        tooltipTimeout = setTimeout(async () => {
+            try {
+                const response = await sendMessageAsync({ type: "checkPhishing", url: url });
+                if (response) {
+                    console.log('Phishing check response:', response);
+                    showTooltip(linkElement, response.risk, response.probability, url);
+                }
+            } catch (error) {
+                console.error("Error in sending message:", error.message);
             }
-        } catch (error) {
-            console.error("Error in sending message:", error.message);
-        }
+        }, 1000); // 1초 후에 툴팁 생성
+    }
+});
+
+// 마우스가 링크를 벗어날 때 타이머를 취소
+document.addEventListener('mouseout', (event) => {
+    const linkElement = event.target.closest('a');
+    if (linkElement) {
+        clearTimeout(tooltipTimeout); // 마우스가 벗어나면 타이머 취소
+        hideTooltip(); // 툴팁 숨기기
     }
 });
 
@@ -58,6 +72,14 @@ function showTooltip(linkElement, risk, probability, url) {
     let riskText = '';
     let riskClass = '';
 
+    // 확률값에서 % 기호 제거 후 실수로 변환
+    let displayProbability = parseFloat(probability.replace('%', ''));
+
+    // 확률값이 유효한 숫자가 아니면 0을 사용
+    if (isNaN(displayProbability)) {
+        displayProbability = 0;
+    }
+
     switch (risk) {
         case 1:
             riskText = 'Phishing';
@@ -78,7 +100,7 @@ function showTooltip(linkElement, risk, probability, url) {
         <a href="#" class="tooltip-detail-link" data-url="${url}">자세히 보기</a>
     </div>
     <div class="tooltip-body">
-        피싱 사이트일 확률: <span class="tooltip-probability">${(probability * 100).toFixed(2)}%</span>
+        피싱 사이트일 확률: <span class="tooltip-probability">${displayProbability.toFixed(2)}%</span>
     </div>
     `;
 
@@ -92,6 +114,7 @@ function showTooltip(linkElement, risk, probability, url) {
         openDetailedPage(clickedUrl);
     });
 }
+
 
 // 툴팁 위치 설정 함수
 function positionTooltip(tooltip, linkElement) {
@@ -148,34 +171,5 @@ function isMouseWithinBounds(mouseX, mouseY, rect) {
 // "자세히 보기" 클릭 시 페이지 이동과 데이터 전송 처리
 function openDetailedPage(url) {
     console.log('전송할 URL:', url); // 콘솔에 전송할 URL 출력
-    window.open(`http://localhost:3000?original_url=${encodeURIComponent(url)}`, '_blank');
+    window.open(`https://www.catch-phishing.site?original_url=${encodeURIComponent(url)}`, '_blank');
 }
-
-
-// api 필요한 경우 !
-// function openDetailedPage(url) {
-//     console.log('전송할 URL:', url); // 콘솔에 전송할 URL 출력
-
-//     // 전송할 데이터 생성
-//     const requestData = {
-//         url: url
-//     };
-
-//     // API 요청
-//     fetch('http://43.203.35.252:5000/api/url/detailed', {  // 필요시 https로 변경
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(requestData)
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         console.log('전송된 피싱 데이터:', data);
-//         // 페이지 이동
-//         window.open(`http://localhost:3000?original_url=${encodeURIComponent(url)}`, '_blank');
-//     })
-//     .catch(error => {
-//         console.error('데이터 전송 에러:', error);
-//     });
-// }
